@@ -175,16 +175,27 @@ public class Application extends javafx.application.Application {
             }
 
             //Turn the snake
-            switch (key) {
-                case UP -> snake.facing = Direction.up;
-                case DOWN -> snake.facing = Direction.down;
-                case RIGHT -> snake.facing = Direction.right;
-                case LEFT -> snake.facing = Direction.left;
-                default -> {
-                    return;
-                }
+            if (key == KeyCode.UP &&
+                snake.facing != Direction.down && snake.facing != Direction.up && snake.newFacing != Direction.up) {
+                    snake.newFacing = Direction.up;
             }
-            playSound("turn.wav");
+            else if (key == KeyCode.DOWN &&
+                snake.facing != Direction.up && snake.facing != Direction.down && snake.newFacing != Direction.down) {
+                    snake.newFacing = Direction.down;
+            }
+            else if (key == KeyCode.RIGHT &&
+                snake.facing != Direction.left && snake.facing != Direction.right && snake.newFacing != Direction.right) {
+                    snake.newFacing = Direction.right;
+            }
+            else if (key == KeyCode.LEFT &&
+                snake.facing != Direction.right && snake.facing != Direction.left && snake.newFacing != Direction.left) {
+                    snake.newFacing = Direction.left;
+            }
+            else
+                return;
+
+            if (gameState == GameState.playing)
+                playSound("turn.wav");
         });
     }
 

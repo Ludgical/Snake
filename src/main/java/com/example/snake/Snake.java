@@ -19,6 +19,7 @@ public class Snake {
     Rectangle[][] xConnections = new Rectangle[SQUARES_PER_SIDE - 1][SQUARES_PER_SIDE    ];
     Rectangle[][] yConnections = new Rectangle[SQUARES_PER_SIDE    ][SQUARES_PER_SIDE - 1];
     ImageView faceView  = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("Images/snake face.png"))));
+    Direction newFacing;
     Direction facing;
 
     Apple apple;
@@ -27,18 +28,24 @@ public class Snake {
         for(int x = 0; x < SQUARES_PER_SIDE; x++)
             for(int y = 0; y < SQUARES_PER_SIDE; y++) {
                 //Snake square
+                Application.root.getChildren().remove(snakeSquares[x][y]);
+
                 snakeSquares[x][y] = makeSnakeSquare(x, y);
                 hideSnakeSquare(x, y);
                 Application.root.getChildren().add(snakeSquares[x][y]);
 
                 //X connection
                 if(x < SQUARES_PER_SIDE - 1) {
+                    Application.root.getChildren().remove(xConnections[x][y]);
+
                     xConnections[x][y] = makeConnection(x, y, 'x');
                     hideConnection(x, y, 'x');
                     Application.root.getChildren().add(xConnections[x][y]);
                 }
                 //Y connection
                 if(y < SQUARES_PER_SIDE - 1) {
+                    Application.root.getChildren().remove(yConnections[x][y]);
+
                     yConnections[x][y] = makeConnection(x, y, 'y');
                     hideConnection(x, y, 'y');
                     Application.root.getChildren().add(yConnections[x][y]);
@@ -54,6 +61,7 @@ public class Snake {
 
         //Rotate 90 to face the snake face right
         faceView.setRotate(90);
+        newFacing = null;
         facing = Direction.right;
 
         showSnake();
@@ -88,6 +96,9 @@ public class Snake {
     public void moveSnake() {
         int[] headLocation = snake.getLast();
         int[] newHeadLocation = new int[2];
+
+        if (newFacing != null)
+            facing = newFacing;
         switch (facing) {
             case up:
                 newHeadLocation[0] = headLocation[0];     //X of the head is the same
